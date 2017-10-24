@@ -2,7 +2,7 @@ package me.nickland.inspirationalquote
 
 import org.junit.Test
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -13,7 +13,7 @@ class ExampleUnitTest {
 
     @Test
     @Throws(Exception::class)
-    fun addition_isCorrect() {
+    fun assert() {
         assertEquals(4, (2 + 2).toLong())
     }
 }
