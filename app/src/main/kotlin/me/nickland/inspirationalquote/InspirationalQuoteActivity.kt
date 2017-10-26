@@ -9,7 +9,7 @@ class InspirationalQuoteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inspirational_quote)
-        val textView: TextView = findViewById(R.id.inspirationalQuote) as TextView
+        val textView = findViewById<TextView>(R.id.inspirationalQuote)
 
         textView.text = getString(R.string.inspirationalQuote)
     }
