@@ -1,5 +1,6 @@
 package me.nickland.inspirationalquote
 
+import android.content.Intent
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
@@ -8,7 +9,11 @@ import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.filters.LargeTest
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import android.util.Log
+import com.github.tomakehurst.wiremock.client.WireMock.*
+import me.nickland.inspirationalquote.util.AssetReaderUtil
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +31,10 @@ class InspirationalQuoteInstrumentedTest {
     @JvmField
     val mActivityRule: ActivityTestRule<InspirationalQuoteActivity> = ActivityTestRule(InspirationalQuoteActivity::class.java)
 
+    @Before
+    fun setUp() {
+    }
+
     @Test
     @Throws(Exception::class)
     fun useAppContext() {
@@ -36,6 +45,16 @@ class InspirationalQuoteInstrumentedTest {
 
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
+        val activity = mActivityRule.launchActivity(Intent(InstrumentationRegistry.getContext(), InspirationalQuoteActivity::class.java))
+        val jsonBody = AssetReaderUtil.asset(activity, "200.json")
+        Log.d("TAG", jsonBody.toString())
+        stubFor(get(urlMatching("/qod"))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withBody("stuff")))
+        val intent = Intent()
+        intent.putExtra("quote", "A new quote of the day")
+        mActivityRule.launchActivity(intent)
         onView(withId(R.id.inspirationalQuote))
                 .check(matches(withText("A brand new inspirational quote")))
     }

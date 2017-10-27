@@ -1,0 +1,26 @@
+{
+  "success": {
+    "total": 1
+  },
+  "contents": {
+    "quotes": [
+      {
+        "quote": "Winning is nice if you don't lose your integrity in the process.",
+        "length": "64",
+        "author": "Arnold Horshak",
+        "tags": [
+          "ethics",
+          "inspire",
+          "winning"
+        ],
+        "category": "inspire",
+        "date": "2017-10-27",
+        "permalink": "https://theysaidso.com/quote/ARN6aCBc3tAP_K5gPSyqUgeF/arnold-horshak-winning-is-nice-if-you-dont-lose-your-integrity-in-the-process",
+        "title": "Inspiring Quote of the day",
+        "background": "https://theysaidso.com/img/bgs/man_on_the_mountain.jpg",
+        "id": "ARN6aCBc3tAP_K5gPSyqUgeF"
+      }
+    ],
+    "copyright": "2017-19 theysaidso.com"
+  }
+}
