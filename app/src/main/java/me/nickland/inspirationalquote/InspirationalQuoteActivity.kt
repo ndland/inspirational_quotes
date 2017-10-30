@@ -13,4 +13,8 @@ class InspirationalQuoteActivity : AppCompatActivity() {
 
         textView.text = getString(R.string.inspirationalQuote)
     }
+
+    fun getQuote() {
+
+    }
 }
