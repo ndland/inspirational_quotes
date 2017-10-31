@@ -2,7 +2,10 @@ package me.nickland.inspirationalquote
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.StrictMode
 import android.widget.TextView
+import org.json.JSONObject
+import java.net.URL
 
 class InspirationalQuoteActivity : AppCompatActivity() {
 
@@ -11,10 +14,17 @@ class InspirationalQuoteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_inspirational_quote)
         val textView = findViewById<TextView>(R.id.inspirationalQuote) as TextView
 
-        textView.text = getString(R.string.inspirationalQuote)
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
+        textView.text = getQuoteOfTheDay()
     }
 
-    fun getQuote() {
-
+    private fun getQuoteOfTheDay(): String {
+        return JSONObject(URL("https://quotes.rest/qod").readText())
+                .getJSONObject("contents")
+                .getJSONArray("quotes")
+                .getJSONObject(0)
+                .getString("quote")
     }
 }

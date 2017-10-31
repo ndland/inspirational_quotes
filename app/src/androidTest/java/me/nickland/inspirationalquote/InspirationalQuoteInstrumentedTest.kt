@@ -11,6 +11,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.net.URL
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -38,17 +39,18 @@ class InspirationalQuoteInstrumentedTest {
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
         val response200 = JSONObject(this::class.java.classLoader.getResource("200.json").readText())
-        val quote = response200.getJSONObject("contents").getJSONArray("quotes").getJSONObject(0).getString("quote")
-//        val activity = mActivityRule.launchActivity(Intent(InstrumentationRegistry.getContext(), InspirationalQuoteActivity::class.java))
-//        Log.d("TAG", jsonBody.toString())
-//        stubFor(get(urlMatching("/qod"))
-//                .willReturn(aResponse() //                        .withStatus(200)
-//                        .withBody("stuff")))
-//        val intent = Intent()
-//        intent.putExtra("quote", "A new quote of the day")
-//        mActivityRule.launchActivity(intent)
+        val expectedQuote = response200
+                .getJSONObject("contents")
+                .getJSONArray("quotes")
+                .getJSONObject(0)
+                .getString("quote")
+        val actualQuote = JSONObject(URL("https://quotes.rest/qod").readText())
+                .getJSONObject("contents")
+                .getJSONArray("quotes")
+                .getJSONObject(0)
+                .getString("quote")
         onView(withId(R.id.inspirationalQuote))
-                .check(matches(withText("A brand new inspirational quote")))
+                .check(matches(withText(actualQuote)))
     }
 }
 
