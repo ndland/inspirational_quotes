@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/InspirationalQuote.iml" filepath="$PROJECT_DIR$/InspirationalQuote.iml" />
+      <module fileurl="file://C:\Users\hzf0pt\code\android\inspirational_quotes\InspirationalQuote.iml" filepath="C:\Users\hzf0pt\code\android\inspirational_quotes\InspirationalQuote.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/inspirational_quotes.iml" filepath="$PROJECT_DIR$/inspirational_quotes.iml" />
     </modules>
