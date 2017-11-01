@@ -6,6 +6,7 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
+import me.nickland.inspirationalquote.activity.InspirationalQuoteActivity
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Before
