@@ -6,7 +6,6 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
-import android.util.Log
 import me.nickland.inspirationalquote.activity.InspirationalQuoteActivity
 import me.nickland.inspirationalquote.constants.Constants
 import okhttp3.mockwebserver.MockResponse
@@ -28,7 +27,7 @@ class InspirationalQuoteInstrumentedTest {
 
     @Rule
     @JvmField
-    val mActivityRule: ActivityTestRule<InspirationalQuoteActivity> = ActivityTestRule(InspirationalQuoteActivity::class.java)
+    val mActivityRule: ActivityTestRule<InspirationalQuoteActivity> = ActivityTestRule(InspirationalQuoteActivity::class.java, false, false)
 
     @Before
     fun setUp() {
@@ -44,8 +43,6 @@ class InspirationalQuoteInstrumentedTest {
 
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
-        println("Base URL: ${Constants.BASE_URL}")
-        Log.e(TAG,"Base URL: ${Constants.BASE_URL}")
         val response200 = this::class.java.classLoader.getResource("200.json").readText()
         val jsonResponse = JSONObject(response200)
         val expectedQuote = jsonResponse
