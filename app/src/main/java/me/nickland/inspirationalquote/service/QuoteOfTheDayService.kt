@@ -1,6 +1,7 @@
 package me.nickland.inspirationalquote.service
 
 import me.nickland.inspirationalquote.api.QuoteOfTheDayApi
+import me.nickland.inspirationalquote.constants.Constants
 import me.nickland.inspirationalquote.models.QuoteOfTheDayResponse
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -15,7 +16,7 @@ class QuoteOfTheDayService {
 
     init {
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://quotes.rest")
+                .baseUrl(Constants.BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build()
 

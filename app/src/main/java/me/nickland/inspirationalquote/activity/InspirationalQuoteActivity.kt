@@ -1,19 +1,18 @@
 package me.nickland.inspirationalquote.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.TextView
 import me.nickland.inspirationalquote.R
-import me.nickland.inspirationalquote.api.QuoteOfTheDayApi
 import me.nickland.inspirationalquote.service.QuoteOfTheDayService
-import org.json.JSONObject
-import java.net.URL
 
 class InspirationalQuoteActivity : AppCompatActivity() {
 
-    private val quoteService = QuoteOfTheDayService()
+    private lateinit var quoteService: QuoteOfTheDayService
+    private var quote: String = ""
+    private var author: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,16 +26,16 @@ class InspirationalQuoteActivity : AppCompatActivity() {
     }
 
     private fun getQuoteOfTheDay(): String {
+        quoteService = QuoteOfTheDayService()
         val qod = quoteService.getQuoteOfTheDay()
         val response = qod.execute()
-        Log.e(TAG, "Response body: ${response.body()?.contents?.quotes?.get(0)?.quote}")
-        return ""
-
-//        return JSONObject(URL("https://quotes.rest/qod").readText())
-//                .getJSONObject("contents")
-//                .getJSONArray("quotes")
-//                .getJSONObject(0)
-//                .getString("quote")
+        Log.e(TAG, "Response: $response")
+        response?.let {
+            quote = response.body()!!.contents.quotes[0].quote
+            author = response.body()!!.contents.quotes[0].author
+        }
+        Log.e(TAG, "Expected Quote: $quote")
+        return quote
     }
 
     companion object {
