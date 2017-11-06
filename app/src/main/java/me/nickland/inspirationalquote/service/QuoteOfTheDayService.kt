@@ -5,6 +5,7 @@ import me.nickland.inspirationalquote.constants.Constants
 import me.nickland.inspirationalquote.models.QuoteOfTheDayErrorResponse
 import me.nickland.inspirationalquote.models.QuoteOfTheDayResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -27,26 +28,47 @@ class QuoteOfTheDayService {
     }
 
     fun getQuoteOfTheDay(): String {
-        return handleResponse(quoteOfTheDayApi.getQuoteOfTheDay())
+        return extractMessageFromResponse(quoteOfTheDayApi.getQuoteOfTheDay())
     }
 
-    fun handleResponse(quoteOfTheDay: Call<QuoteOfTheDayResponse>): String {
-        val response = quoteOfTheDay.execute()
+    private fun extractMessageFromResponse(quoteOfTheDay: Call<QuoteOfTheDayResponse>): String {
+        val response = preformGetRequestOnQuoteOfTheDay(quoteOfTheDay)
         if (response.isSuccessful) {
-            response?.let {
-                message = response.body()!!.contents.quotes[0].quote
-            }
+            extractQuoteOfTheDay(response)
         } else {
-            response?.let {
-                val errorConverter = retrofit.responseBodyConverter<QuoteOfTheDayErrorResponse>(
-                        QuoteOfTheDayErrorResponse::class.java,
-                        arrayOfNulls<Annotation>(0))
-
-                val errorResponse = errorConverter.convert(response.errorBody())
-                message = errorResponse.error.message
-            }
+            convertResponseToErrorResponse(response)
         }
         return message
+    }
+
+    private fun preformGetRequestOnQuoteOfTheDay(quoteOfTheDay: Call<QuoteOfTheDayResponse>): Response<QuoteOfTheDayResponse> {
+        return quoteOfTheDay.execute()
+    }
+
+    private fun convertResponseToErrorResponse(response: Response<QuoteOfTheDayResponse>) {
+        response.let {
+            val errorConverter = retrofit.responseBodyConverter<QuoteOfTheDayErrorResponse>(
+                    QuoteOfTheDayErrorResponse::class.java,
+                    arrayOfNulls<Annotation>(0))
+
+            extractErrorMessage(errorConverter.convert(response.errorBody()))
+        }
+    }
+
+    private fun extractErrorMessage(errorResponse: QuoteOfTheDayErrorResponse) {
+        errorResponse.let {
+            message = errorResponse.error.message
+        }
+    }
+
+    private fun extractQuoteOfTheDay(response: Response<QuoteOfTheDayResponse>) {
+        response.let {
+            message = response.body()
+                    ?.contents
+                    ?.quotes
+                    ?.get(0)
+                    ?.quote!!
+        }
     }
 
     companion object {

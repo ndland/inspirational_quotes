@@ -30,6 +30,9 @@ class InspirationalQuoteInstrumentedTest {
     private lateinit var server: MockWebServer
     private var expectedQuote: String? = null
     private var expectedError: String? = null
+    private val parser = Parser()
+    private val successResponse = "successfulResponse.json"
+    private val errorResponse = "errorResponse.json"
 
     @Rule
     @JvmField
@@ -49,10 +52,7 @@ class InspirationalQuoteInstrumentedTest {
 
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
-        val successfulResponse = this::class.java.classLoader.getResource("successfulResponse.json")?.readText()
-        val parser = Parser()
-        val stringBuilder = StringBuilder(successfulResponse)
-        val json = parser.parse(stringBuilder) as JsonObject
+        val json = buildJsonObject(readFile(successResponse))
         json.let {
             expectedQuote = json
                     .obj("contents")
@@ -63,22 +63,17 @@ class InspirationalQuoteInstrumentedTest {
 
         server.enqueue(MockResponse()
                 .setResponseCode(200)
-                .setBody(successfulResponse))
+                .setBody(readFile(successResponse)))
 
-        val intent = Intent()
-        mActivityRule.launchActivity(intent)
+        launchActivity()
 
         onView(withId(R.id.inspirationalQuote))
                 .check(matches(withText(expectedQuote)))
     }
 
-
     @Test
     fun ensureTheApplicationHandlesErrors() {
-        val errorResponse = this::class.java.classLoader.getResource("errorResponse.json")?.readText()
-        val parser = Parser()
-        val stringBuilder = StringBuilder(errorResponse)
-        val json = parser.parse(stringBuilder) as JsonObject
+        val json = buildJsonObject(readFile(errorResponse))
         json.let {
             expectedError = json
                     .obj("error")
@@ -87,14 +82,25 @@ class InspirationalQuoteInstrumentedTest {
 
         server.enqueue(MockResponse()
                 .setResponseCode(404)
-                .setBody(errorResponse))
+                .setBody(readFile(errorResponse)))
 
-        val intent = Intent()
-        mActivityRule.launchActivity(intent)
+        launchActivity()
 
         onView(withId(R.id.inspirationalQuote))
                 .check(matches(withText(expectedError)))
     }
+
+    private fun launchActivity() {
+        val intent = Intent()
+        mActivityRule.launchActivity(intent)
+    }
+
+    private fun buildJsonObject(response: String?): JsonObject {
+        return parser.parse(StringBuilder(response)) as JsonObject
+    }
+
+    private fun readFile(fileName: String) =
+            this::class.java.classLoader.getResource(fileName)?.readText()
 
     companion object {
         val TAG = InspirationalQuoteInstrumentedTest::class.java.simpleName
