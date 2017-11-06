@@ -28,6 +28,8 @@ import org.junit.Test
 class InspirationalQuoteInstrumentedTest {
 
     private lateinit var server: MockWebServer
+    private var expectedQuote: String? = null
+    private var expectedError: String? = null
 
     @Rule
     @JvmField
@@ -45,30 +47,53 @@ class InspirationalQuoteInstrumentedTest {
         server.shutdown()
     }
 
-    private lateinit var expectedQuote: String
-
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
-        val response200 = this::class.java.classLoader.getResource("200.json").readText()
+        val successfulResponse = this::class.java.classLoader.getResource("successfulResponse.json")?.readText()
         val parser = Parser()
-        val stringBuilder = StringBuilder(response200)
+        val stringBuilder = StringBuilder(successfulResponse)
         val json = parser.parse(stringBuilder) as JsonObject
         json.let {
             expectedQuote = json
                     .obj("contents")
                     ?.array<JsonObject>("quotes")
                     ?.get(0)
-                    ?.string("quote")!!
+                    ?.string("quote")
         }
+
         server.enqueue(MockResponse()
                 .setResponseCode(200)
-                .setBody(response200))
+                .setBody(successfulResponse))
 
         val intent = Intent()
         mActivityRule.launchActivity(intent)
 
         onView(withId(R.id.inspirationalQuote))
                 .check(matches(withText(expectedQuote)))
+    }
+
+
+    @Test
+    fun ensureTheApplicationHandlesErrors() {
+        val errorResponse = this::class.java.classLoader.getResource("errorResponse.json")?.readText()
+        val parser = Parser()
+        val stringBuilder = StringBuilder(errorResponse)
+        val json = parser.parse(stringBuilder) as JsonObject
+        json.let {
+            expectedError = json
+                    .obj("error")
+                    ?.string("message")
+        }
+
+        server.enqueue(MockResponse()
+                .setResponseCode(404)
+                .setBody(errorResponse))
+
+        val intent = Intent()
+        mActivityRule.launchActivity(intent)
+
+        onView(withId(R.id.inspirationalQuote))
+                .check(matches(withText(expectedError)))
     }
 
     companion object {

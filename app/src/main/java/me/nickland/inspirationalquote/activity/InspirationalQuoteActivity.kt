@@ -9,10 +9,6 @@ import me.nickland.inspirationalquote.service.QuoteOfTheDayService
 
 class InspirationalQuoteActivity : AppCompatActivity() {
 
-    private lateinit var quoteService: QuoteOfTheDayService
-    private lateinit var quote: String
-    private lateinit var author: String
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_inspirational_quote)
@@ -25,14 +21,7 @@ class InspirationalQuoteActivity : AppCompatActivity() {
     }
 
     private fun getQuoteOfTheDay(): String {
-        quoteService = QuoteOfTheDayService()
-        val qod = quoteService.getQuoteOfTheDay()
-        val response = qod.execute()
-        response?.let {
-            quote = response.body()!!.contents.quotes[0].quote
-            author = response.body()!!.contents.quotes[0].author
-        }
-        return quote
+        return QuoteOfTheDayService().getQuoteOfTheDay()
     }
 
     companion object {
