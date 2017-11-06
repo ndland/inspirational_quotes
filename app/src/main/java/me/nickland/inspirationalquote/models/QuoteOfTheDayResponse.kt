@@ -3,7 +3,7 @@ package me.nickland.inspirationalquote.models
 /**
  * Created by hzf0pt on 11/1/2017.
  */
-class QuoteOfTheDayResponse(val success: Success,
+data class QuoteOfTheDayResponse(val success: Success,
                             val contents: Content) {
 
 }
