@@ -50,11 +50,14 @@ class InspirationalQuoteInstrumentedTest {
         server.shutdown()
     }
 
+    /**
+     * Make sure that on a successful response, the app will display
+     * the Quote of the Day
+     */
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
-        val json = buildJsonObject(readFile(successResponse))
-        json.let {
-            expectedQuote = json
+        buildJsonObject(readFile(successResponse)).let {
+            expectedQuote = buildJsonObject(readFile(successResponse))
                     .obj("contents")
                     ?.array<JsonObject>("quotes")
                     ?.get(0)
@@ -71,11 +74,15 @@ class InspirationalQuoteInstrumentedTest {
                 .check(matches(withText(expectedQuote)))
     }
 
+    /**
+     * Make sure that if the response comes back with an HTTP status
+     * of 404, we display the error message that comes back in the
+     * response
+     */
     @Test
     fun ensureTheApplicationHandlesErrors() {
-        val json = buildJsonObject(readFile(errorResponse))
-        json.let {
-            expectedError = json
+        buildJsonObject(readFile(errorResponse)).let {
+            expectedError = buildJsonObject(readFile(errorResponse))
                     .obj("error")
                     ?.string("message")
         }
