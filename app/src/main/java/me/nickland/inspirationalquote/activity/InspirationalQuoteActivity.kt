@@ -1,11 +1,11 @@
-package me.nickland.inspirationalquote
+package me.nickland.inspirationalquote.activity
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.StrictMode
+import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
-import org.json.JSONObject
-import java.net.URL
+import me.nickland.inspirationalquote.R
+import me.nickland.inspirationalquote.service.QuoteOfTheDayService
 
 class InspirationalQuoteActivity : AppCompatActivity() {
 
@@ -21,10 +21,10 @@ class InspirationalQuoteActivity : AppCompatActivity() {
     }
 
     private fun getQuoteOfTheDay(): String {
-        return JSONObject(URL("https://quotes.rest/qod").readText())
-                .getJSONObject("contents")
-                .getJSONArray("quotes")
-                .getJSONObject(0)
-                .getString("quote")
+        return QuoteOfTheDayService().getQuoteOfTheDay()
+    }
+
+    companion object {
+        private val TAG = InspirationalQuoteActivity::class.java.simpleName
     }
 }

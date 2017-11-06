@@ -1,5 +1,6 @@
 package me.nickland.inspirationalquote
 
+import me.nickland.inspirationalquote.activity.InspirationalQuoteActivity
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 
