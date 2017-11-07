@@ -99,6 +99,8 @@ class InspirationalQuoteInstrumentedTest {
     }
 
     /**
+     * Make sure that the app displays the message about too many
+     * requests when the request limit has been exceeded.
      */
     @Test
     fun ensureTheApplicationHandlesTooManyRequestErrors() {
@@ -109,7 +111,7 @@ class InspirationalQuoteInstrumentedTest {
         }
 
         server.enqueue(MockResponse()
-                .setResponseCode(404)
+                .setResponseCode(429)
                 .setBody(readFile(tooManyRequestsResponse)))
 
         launchActivity()
