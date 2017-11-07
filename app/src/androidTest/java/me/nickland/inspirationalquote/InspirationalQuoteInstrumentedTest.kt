@@ -6,11 +6,7 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
-import com.beust.klaxon.array
-import com.beust.klaxon.obj
-import com.beust.klaxon.string
+import com.beust.klaxon.*
 import me.nickland.inspirationalquote.activity.InspirationalQuoteActivity
 import me.nickland.inspirationalquote.constants.Constants
 import okhttp3.mockwebserver.MockResponse
@@ -34,6 +30,8 @@ class InspirationalQuoteInstrumentedTest {
     private val successResponse = "successfulResponse.json"
     private val errorResponse = "errorResponse.json"
     private val tooManyRequestsResponse = "tooManyRequestsResponse.json"
+    private val error = "error"
+    private val message = "message"
 
     @Rule
     @JvmField
@@ -84,8 +82,8 @@ class InspirationalQuoteInstrumentedTest {
     fun ensureTheApplicationHandlesErrors() {
         buildJsonObject(readFile(errorResponse)).let {
             expectedError = buildJsonObject(readFile(errorResponse))
-                    .obj("error")
-                    ?.string("message")
+                    .obj(error)
+                    ?.string(message)
         }
 
         server.enqueue(MockResponse()
@@ -106,8 +104,8 @@ class InspirationalQuoteInstrumentedTest {
     fun ensureTheApplicationHandlesTooManyRequestErrors() {
         buildJsonObject(readFile(tooManyRequestsResponse)).let {
             expectedError = buildJsonObject(readFile(tooManyRequestsResponse))
-                    .obj("error")
-                    ?.string("message")
+                    .obj(error)
+                    ?.string(message)
         }
 
         server.enqueue(MockResponse()
