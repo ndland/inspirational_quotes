@@ -9,12 +9,14 @@ import android.support.test.rule.ActivityTestRule
 import com.beust.klaxon.*
 import me.nickland.inspirationalquote.activity.InspirationalQuoteActivity
 import me.nickland.inspirationalquote.constants.Constants
+import me.nickland.inspirationalquote.tasks.QuoteOfTheDayTask
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.*
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -55,8 +57,9 @@ class InspirationalQuoteInstrumentedTest {
      */
     @Test
     fun ensureTheQuoteOfTheDayIsDisplayed() {
-        buildJsonObject(readFile(successResponse)).let {
-            expectedQuote = buildJsonObject(readFile(successResponse))
+        val successResponseRaw = readFile(successResponse)
+        buildJsonObject(successResponseRaw).let {
+            expectedQuote = buildJsonObject(successResponseRaw)
                     .obj("contents")
                     ?.array<JsonObject>("quotes")
                     ?.get(0)
@@ -65,7 +68,7 @@ class InspirationalQuoteInstrumentedTest {
 
         server.enqueue(MockResponse()
                 .setResponseCode(200)
-                .setBody(readFile(successResponse)))
+                .setBody(successResponseRaw))
 
         launchActivity()
 
@@ -80,15 +83,16 @@ class InspirationalQuoteInstrumentedTest {
      */
     @Test
     fun ensureTheApplicationHandlesErrors() {
-        buildJsonObject(readFile(errorResponse)).let {
-            expectedError = buildJsonObject(readFile(errorResponse))
+        val errorResponseRaw = readFile(errorResponse)
+        buildJsonObject(errorResponseRaw).let {
+            expectedError = buildJsonObject(errorResponseRaw)
                     .obj(error)
                     ?.string(message)
         }
 
         server.enqueue(MockResponse()
                 .setResponseCode(404)
-                .setBody(readFile(errorResponse)))
+                .setBody(errorResponseRaw))
 
         launchActivity()
 
@@ -102,20 +106,27 @@ class InspirationalQuoteInstrumentedTest {
      */
     @Test
     fun ensureTheApplicationHandlesTooManyRequestErrors() {
-        buildJsonObject(readFile(tooManyRequestsResponse)).let {
-            expectedError = buildJsonObject(readFile(tooManyRequestsResponse))
+        val tooManyRequestsResponseRaw = readFile(tooManyRequestsResponse)
+        buildJsonObject(tooManyRequestsResponseRaw).let {
+            expectedError = buildJsonObject(tooManyRequestsResponseRaw)
                     .obj(error)
                     ?.string(message)
         }
 
         server.enqueue(MockResponse()
                 .setResponseCode(429)
-                .setBody(readFile(tooManyRequestsResponse)))
+                .setBody(tooManyRequestsResponseRaw))
 
         launchActivity()
 
         onView(withId(R.id.inspirationalQuote))
                 .check(matches(withText(expectedError)))
+    }
+
+    @Test
+    fun ensureTheAppDoesNotCallApiWhenAQuoteHasBeenCached() {
+        val mockedTask = mock(QuoteOfTheDayTask::class.java)
+        verify(mockedTask, never()).execute()
     }
 
     private fun launchActivity() {
