@@ -33,6 +33,7 @@ class InspirationalQuoteInstrumentedTest {
     private val parser = Parser()
     private val successResponse = "successfulResponse.json"
     private val errorResponse = "errorResponse.json"
+    private val tooManyRequestsResponse = "tooManyRequestsResponse.json"
 
     @Rule
     @JvmField
@@ -90,6 +91,26 @@ class InspirationalQuoteInstrumentedTest {
         server.enqueue(MockResponse()
                 .setResponseCode(404)
                 .setBody(readFile(errorResponse)))
+
+        launchActivity()
+
+        onView(withId(R.id.inspirationalQuote))
+                .check(matches(withText(expectedError)))
+    }
+
+    /**
+     */
+    @Test
+    fun ensureTheApplicationHandlesTooManyRequestErrors() {
+        buildJsonObject(readFile(tooManyRequestsResponse)).let {
+            expectedError = buildJsonObject(readFile(tooManyRequestsResponse))
+                    .obj("error")
+                    ?.string("message")
+        }
+
+        server.enqueue(MockResponse()
+                .setResponseCode(404)
+                .setBody(readFile(tooManyRequestsResponse)))
 
         launchActivity()
 

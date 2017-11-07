@@ -1,0 +1,6 @@
+{
+  "error": {
+    "code": 429,
+    "message": "Too Many Requests: Rate limit of 10 requests per hour exceeded. Please wait for 59 minutes and 58 seconds."
+  }
+}
