@@ -6,7 +6,12 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.withId
 import android.support.test.espresso.matcher.ViewMatchers.withText
 import android.support.test.rule.ActivityTestRule
-import com.beust.klaxon.*
+import android.support.test.runner.AndroidJUnit4
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
+import com.beust.klaxon.array
+import com.beust.klaxon.obj
+import com.beust.klaxon.string
 import me.nickland.inspirationalquote.activity.InspirationalQuoteActivity
 import me.nickland.inspirationalquote.constants.Constants
 import me.nickland.inspirationalquote.tasks.QuoteOfTheDayTask
@@ -16,13 +21,17 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.junit.runner.RunWith
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
+import org.mockito.Mockito.verify
 
 /**
  * Instrumentation test, which will execute on an Android device.
  *
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
+@RunWith(AndroidJUnit4::class)
 class InspirationalQuoteInstrumentedTest {
 
     private lateinit var server: MockWebServer
@@ -123,6 +132,7 @@ class InspirationalQuoteInstrumentedTest {
                 .check(matches(withText(expectedError)))
     }
 
+//     TODO: Fix this test so it can be tested correctly
     @Test
     fun ensureTheAppDoesNotCallApiWhenAQuoteHasBeenCached() {
         val mockedTask = mock(QuoteOfTheDayTask::class.java)
